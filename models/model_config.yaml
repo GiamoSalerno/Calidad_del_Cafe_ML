@@ -1,0 +1,20 @@
+dataset: 
+     script_path: os.path.join(data_path, "raw", "arabica_data_cleaned.csv")
+
+model: 
+     script_path: os.path.join(src_path,"..","trained_model1.pkl")
+
+train:
+     script_path: os.path.join(data_path, "train", 'train.csv'
+
+test:
+     script_path: os.path.join(data_path, "test", 'test.csv'
+
+columns_used:
+     for_Xtrain: ['Country.of.Origin', 'Variety', 'Processing.Method', 'Moisture',
+                  'Harvest.Year', 'Color', 'altitude_mean_meters', 'Category.One.Defects',
+                  'Category.Two.Defects']
+     for_ytrain: ['Total.Cup.Points']
+
+traintestsplit:
+     params: X, y, test_size=0.2, random_state=5, shuffle=True
