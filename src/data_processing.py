@@ -1,6 +1,7 @@
 # Importar librerías
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, LabelBinarizer
+from sklearn.model_selection import train_test_split
 
 # Leer y limpiar los datos
 arabica = pd.read_csv('data/raw/arabica_data_cleaned.csv')
@@ -58,5 +59,11 @@ columnas = ["Country.of.Origin", "Variety", "Processing.Method"]
 for columna in columnas:
     arabica[columna] = le.fit_transform(arabica[columna])
 
+# Dividir en train y test
+
+train, test = train_test_split(arabica, test_size=0.2, shuffle=True, random_state= 5)
+
 # Guardar en carpeta correspondiente.
 arabica.to_csv('data/processed/arabica_processed.csv')
+train.to_csv('data/train/arabica_train.csv')
+test.to_csv('data/test/arabica_test.csv')
