@@ -1,6 +1,7 @@
 # Importar librerías
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, LabelBinarizer
+from imblearn.over_sampling import RandomOverSampler
 from sklearn.model_selection import train_test_split
 
 # Leer y limpiar los datos
@@ -59,11 +60,25 @@ columnas = ["Country.of.Origin", "Variety", "Processing.Method"]
 for columna in columnas:
     arabica[columna] = le.fit_transform(arabica[columna])
 
-# Dividir en train y test
+# Defino la columna target.
+calidad = [0, 1, 2]
+calif = [0, 80, 85, 100]
+arabica['Calidad'] = pd.cut(arabica['Total.Cup.Points'], bins=calif, labels=calidad)
 
-train, test = train_test_split(arabica, test_size=0.2, shuffle=True, random_state= 5)
+# Balanceo el dataframe.
+ros = RandomOverSampler(random_state=5)
+X_resampled, y_resampled = ros.fit_resample(arabica.loc[:, 'Country.of.Origin':'Total.Cup.Points'], arabica['Calidad'])
+df_resampled = pd.DataFrame(X_resampled, columns=arabica.loc[:, 'Country.of.Origin':'Total.Cup.Points'].columns)
+df_resampled['Calidad'] = y_resampled
+df_balanced = pd.concat([arabica, df_resampled], ignore_index=True)
+
+# Quito la "chuleta"
+df_balanced.drop(columns='Total.Cup.Points', inplace=True)
+
+# Dividir en train y test.
+train, test = train_test_split(df_balanced, test_size=0.2, shuffle=True, random_state= 5)
 
 # Guardar en carpeta correspondiente.
-arabica.to_csv('data/processed/arabica_processed.csv')
-train.to_csv('data/train/arabica_train.csv')
-test.to_csv('data/test/arabica_test.csv')
+df_balanced.to_csv('data/processed/arabica_processed.csv', index=False)
+train.to_csv('data/train/arabica_train.csv', index=False)
+test.to_csv('data/test/arabica_test.csv', index=False)
