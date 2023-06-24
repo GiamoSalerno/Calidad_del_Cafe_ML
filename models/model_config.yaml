@@ -1,20 +1,26 @@
-dataset: 
-     script_path: os.path.join(data_path, "raw", "arabica_data_cleaned.csv")
+# Datos de entrenamiento
+data:
+  train_file: data/train/arabica_train.csv
+  target_column: Calidad
 
-model: 
-     script_path: os.path.join(src_path,"..","trained_model1.pkl")
+# Guardado del modelo entrenado
+output_file: models/modelo_final.pkl
 
-train:
-     script_path: os.path.join(data_path, "train", 'train.csv'
-
-test:
-     script_path: os.path.join(data_path, "test", 'test.csv'
-
-columns_used:
-     for_Xtrain: ['Country.of.Origin', 'Variety', 'Processing.Method', 'Moisture',
-                  'Harvest.Year', 'Color', 'altitude_mean_meters', 'Category.One.Defects',
-                  'Category.Two.Defects']
-     for_ytrain: ['Total.Cup.Points']
-
-traintestsplit:
-     params: X, y, test_size=0.2, random_state=5, shuffle=True
+# Configuración del modelo
+# MERAMENTE INFORMATIVO, NO TOCAR
+model:
+  pipeline:
+    steps:
+      - name: selectkbest
+        class: SelectKBest
+        params:
+          k: 9
+      - name: pca
+        class: PCA
+        params:
+          n_components: 9
+      - name: classifier
+        class: GradientBoostingClassifier
+        params:
+          max_depth: 7
+          max_features: 2
