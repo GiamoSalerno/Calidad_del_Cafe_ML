@@ -21,17 +21,18 @@ test = pd.read_csv('data/test/arabica_test.csv')
 
 # Sidebar
 st.sidebar.title('Contenido')
+st.sidebar.divider()
 
 # ¿Agua Sucia o Café
 if st.sidebar.button('¿Agua Sucia o Café?'):
-    st.header('¡A nadie le gusta un mal café!')
+    st.title('¡A nadie le gusta un mal café!')
     st.markdown('Es por eso que nuestra empresa busca siempre lo mejor para nuestros clientes, un café de aroma irresistible, con cuerpo balanceado, que no sea demasiado ácido, y sobre todo, que esté muy bien de precio.')
     st.markdown('La idea principal es crear un clasificador de calidad de café en tres distintas categorías: estándar, bueno y premium; para así asegurarnos de siempre comprar productos de calidad por el precio ideal.')
     st.markdown('Para ello, se utilizan diferentes variables: país de origen, variedad de café, procesado, año de cosecha, humedad, color, defectos e incluso la altura en que ha sido cultivado. Todo esto se introduce en un modelo predictivo de machine learning, para así saber qué tan bueno es el producto antes de realizar la compra.')
 
 # Datos
 if st.sidebar.button('Datos'):
-    st.header('Datos en crudo')
+    st.header('Datos en Crudo')
     arabica
     arabica.shape
     st.divider()
@@ -52,10 +53,10 @@ if st.sidebar.button('Datos'):
 
 # Procesamiento 
 if st.sidebar.button('Procesamiento'):
-    tab0, tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(['En crudo', 'Limpieza', 'Agrupación', 'Correcciones', 'Etiquetado', 'Balanceado', 'Final'])
+    tab0, tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(['Original', 'Limpieza', 'Agrupación', 'Correcciones', 'Etiquetado', 'Balanceado', 'Final'])
 
     with tab0:
-        st.header('Datos en crudo')
+        st.header('Datos en Crudo')
         arabica
         arabica.shape
         st.divider()
@@ -266,6 +267,172 @@ if st.sidebar.button('Procesamiento'):
         test.shape
         st.balloons()
 
-st.sidebar.button('Modelos')
-st.sidebar.button('Conclusiones')
-st.sidebar.divider()
+if st.sidebar.button('Modelos'):
+    tab0, tab1, tab2, tab3 = st.tabs(['Hiperparametrización', 'Modelo Final', 'Entrenamiento', 'Validación'])
+
+    with tab0:
+        st.header('Pipeline')
+        st.code("""
+        pipe = Pipeline(steps = [("scaler", StandardScaler()),
+                       ("selectkbest", SelectKBest()),
+                       ("pca", PCA()),
+                       ('classifier', RandomForestClassifier())])
+
+        logistic_params = {'selectkbest__k' : np.arange(3,9),
+                        'pca__n_components': [8, 9, 10],
+                        'classifier': [LogisticRegression(solver='liblinear')],
+                        'classifier__penalty': ['l1','l2']}
+
+        rf_params = {'scaler' : [StandardScaler(), None],
+                    'selectkbest__k' : np.arange(3,9),
+                    'pca__n_components': [8, 9, 10],
+                    'classifier': [RandomForestClassifier()],
+                    'classifier__max_features': [2, 3, 4],
+                    'classifier__max_depth': [3, 5, 7]}
+
+        gb_params = {'scaler' : [StandardScaler(), None],
+                    'selectkbest__k' : np.arange(3,9),
+                    'pca__n_components': [8, 9, 10],
+                    'classifier': [GradientBoostingClassifier()],
+                    'classifier__max_features': [2, 3, 4],
+                    'classifier__max_depth': [6, 7, 8]}
+
+        knn_params = {'selectkbest__k' : np.arange(3,9),
+                    'pca__n_components': [8, 9, 10],
+                    'classifier': [KNeighborsClassifier()],
+                    'classifier__n_neighbors': [5, 7, 12]}
+
+        svm_params = {'selectkbest__k' : np.arange(3,9),
+                    'pca__n_components': [8, 9, 10],
+                    'classifier': [SVC()],
+                    'classifier__C': [0.1, 1, 10]}
+
+        search_space = [logistic_params, rf_params, gb_params, knn_params, svm_params]
+
+        clf = GridSearchCV(estimator = pipe,
+                            param_grid = search_space,
+                            cv = 3,
+                            scoring = "accuracy",
+                            n_jobs = -1)
+        """)
+        st.markdown('El mejor clasificador en este caso ha sido el Gradient Boosting Classifier.')
+        st.markdown('Como mejores parámetros, el Grid Search ha devuelto:')
+        st.markdown('* max_depth = 7')
+        st.markdown('* max_features = 2')
+        st.markdown('* PCA: 9')
+        st.markdown('* scaler: None')
+        st.markdown('* K = 9')
+        st.divider()
+        st.header('Entrenamiento')
+        st.subheader('Datos Utilizados')
+        arabicapro
+        arabicapro.shape
+        column1, column2 = st.columns([2, 1])
+        
+        with column1:
+            st.subheader('X')
+            X = train.drop(columns='Calidad')
+            X
+            X.shape
+
+        with column2:
+            st.subheader('y')
+            y = train.Calidad
+            y
+            y.shape
+
+        st.divider()
+        st.header('Datos de Evaluación')
+        X = test.drop(columns='Calidad')
+        X
+        X.shape
+        st.header('Resultados')
+        st.subheader('Métricas')
+        st.markdown('Las métricas utilizadas para la evaluación han sido accuracy, precision y recall.')
+        st.markdown('* Accuracy: 97,40 %')
+        st.markdown('* Precision: [100 % ; 94,68 % ; 100 %]')
+        st.markdown('* Recall: [94,14 % ; 100 % ; 96,21 %]')
+        st.subheader('Matriz de Confusión')
+        st.image('app/img/trainmatrix.png')
+
+    with tab1:
+        st.header('Gradient Boosting Classifier')
+        st.code('''
+        best_params = {'selectkbest__k': 9,
+                       'pca__n_components': 9,
+                       'classifier': GradientBoostingClassifier(max_depth = 7,
+                                                                max_features = 2)}
+
+        best_model = Pipeline(steps = [("selectkbest", SelectKBest( k = best_params['selectkbest__k'])),
+                                       ("pca", PCA(n_components = best_params['pca__n_components'])),
+                                       ("classifier", best_params['classifier'])])
+        ''')
+        st.markdown('El modelo final se trata de un Gradient Boosting Classifier, acoplado a un Pipeline para también aplicar modelos no supervisados como el Principal Component Analysis (PCA) y otros procesos como la selección de mejores features.')
+    with tab2:
+        st.header('Datos de Entrenamiento')
+        train
+        train.shape
+
+        col1, col2 = st.columns([2, 1])
+
+        with col1:
+            st.subheader('X')
+            X = train.drop(columns='Calidad')
+            X
+            X.shape
+
+        with col2:
+            st.subheader('y')
+            y = train.Calidad
+            y
+            y.shape
+        
+        st.divider()
+        st.header('Guardado del Modelo Entrenado')
+        st.code('''
+        with open(yaml['output_file'], 'wb') as file:
+            pickle.dump(best_model, file)
+        ''')
+        st.markdown('En lugar de la ruta, se utiliza el parámetro preestablecido en el archivo .yaml')
+    
+    with tab3:
+        st.header('Evaluación del Modelo')
+        st.subheader('Cargado del Modelo')
+        st.code('''
+        with open('models/modelo_final.pkl', 'rb') as file:
+            modelo = pickle.load(file)
+        ''')
+        st.divider()
+        st.header('Datos de Evaluación')
+        test
+        test.shape
+        st.divider()
+
+        col1, col2 = st.columns([2, 1])
+
+        with col1:
+            st.subheader('X')
+            X = test.drop(columns='Calidad')
+            X
+            X.shape
+
+        with col2:
+            st.subheader('y')
+            y = test.Calidad
+            y
+            y.shape
+        st.divider()
+        st.header('Resultados')
+        st.subheader('Métricas')
+        st.markdown('* Accuracy: 97,89 %')
+        st.markdown('* Precision: [100 % ; 95,63 % ; 100 %]')
+        st.markdown('* Recall: [94,51 % ; 100 % ; 97,61 %]')
+        st.subheader('Matriz de Confusión')
+        st.image('app/img/evalmatrix.png')
+        st.balloons()
+
+if st.sidebar.button('Conclusiones'):
+    st.title('Conclusiones')
+    st.markdown('El modelo predictivo parece tener buenos resultados ante los datos aportados, teniendo una precisión casi perfecta.')
+    st.markdown('El objetivo principal era no confundir calidades "extrapoladas", es decir, predecir como prémium una muestra de calidad estándar o vicecersa; por lo que se puede decir que el objetivo ha sido alcanzado.')
+    st.markdown('Las principales variables que más fuerza han tenido para alcanzar una clasificación correcta han sido los defectos de los frutos del café; si éste ha sido dañado por aves o insectos, o si la muestra en general tiene piedras o ramas, algo que se produce por la cosecha industrializada del producto (las muestras escogidas a mano poseen una mejor calidad, y por ende, están tasadas a un precio mayor).')
