@@ -1,0 +1,10 @@
+Para una correcta ejecución de la aplicación, necesitarás tener instaladas las librerías:
+- Streamlit
+- Pandas
+
+Una vez instaladas, abre una terminal y ejecuta:
+"streamlit run app/app.py"
+
+Debería abrirse automáticamente un explorador, en el que cargará la app como una página web.
+
+Una vez hecho, navega por la barra lateral para visitar los diferentes apartados.
