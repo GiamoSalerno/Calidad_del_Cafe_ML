@@ -1,9 +1,11 @@
 # Importo librerías
 from funct import funciones as fun
 from imblearn.over_sampling import RandomOverSampler
+import numpy as np
 import pandas as pd
 import pickle
 import streamlit as st
+import subprocess
 
 # Título de la página
 st.set_page_config(page_title = 'Calidad del Café', page_icon= ":coffee:")
@@ -22,7 +24,6 @@ test = pd.read_csv('data/test/arabica_test.csv')
 # Sidebar
 st.sidebar.title('Contenido')
 st.sidebar.divider()
-
 # ¿Agua Sucia o Café
 if st.sidebar.button('¿Agua Sucia o Café?'):
     st.title('¡A nadie le gusta un mal café!')
@@ -30,6 +31,15 @@ if st.sidebar.button('¿Agua Sucia o Café?'):
     st.markdown('La idea principal es crear un clasificador de calidad de café en tres distintas categorías: estándar, bueno y premium; para así asegurarnos de siempre comprar productos de calidad por el precio ideal.')
     st.markdown('Para ello, se utilizan diferentes variables: país de origen, variedad de café, procesado, año de cosecha, humedad, color, defectos e incluso la altura en que ha sido cultivado. Todo esto se introduce en un modelo predictivo de machine learning, para así saber qué tan bueno es el producto antes de realizar la compra.')
 
+    pais = st.slider('País', 0, 19)
+    variedad = st.slider('Variedad', 0, 16)
+    procesado = st.slider('Procesado', 0, 4)
+    humedad = st.slider('Humedad', 0.0, 0.2)
+    year = st.slider('Año de Cosecha', 2014, 2023)
+    color = st.slider('Color', 0, 1)
+    altitud = st.slider('Altitud', 1, 5000)
+    def1 = st.slider('Defectos de Categoría 1', 0, 50)
+    def2 = st.slider('Defectos de Categoría 2', 0, 50)
 # Datos
 if st.sidebar.button('Datos'):
     st.header('Datos en Crudo')
@@ -268,7 +278,7 @@ if st.sidebar.button('Procesamiento'):
         st.balloons()
 
 if st.sidebar.button('Modelos'):
-    tab0, tab1, tab2, tab3 = st.tabs(['Hiperparametrización', 'Modelo Final', 'Entrenamiento', 'Validación'])
+    tab0, tab1, tab2, tab3, tab4 = st.tabs(['Hiperparametrización', 'Modelo Final', 'Entrenamiento', 'Validación', 'y'])
 
     with tab0:
         st.header('Pipeline')
@@ -436,3 +446,6 @@ if st.sidebar.button('Conclusiones'):
     st.markdown('El modelo predictivo parece tener buenos resultados ante los datos aportados, teniendo una precisión casi perfecta.')
     st.markdown('El objetivo principal era no confundir calidades "extrapoladas", es decir, predecir como prémium una muestra de calidad estándar o vicecersa; por lo que se puede decir que el objetivo ha sido alcanzado.')
     st.markdown('Las principales variables que más fuerza han tenido para alcanzar una clasificación correcta han sido los defectos de los frutos del café; si éste ha sido dañado por aves o insectos, o si la muestra en general tiene piedras o ramas, algo que se produce por la cosecha industrializada del producto (las muestras escogidas a mano poseen una mejor calidad, y por ende, están tasadas a un precio mayor).')
+
+if st.sidebar.button('Demo'):
+    subprocess.run(["streamlit", "run", "app/demo.py"])
