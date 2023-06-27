@@ -59,8 +59,8 @@ pred = modelo.predict(input)[0]
 
 if st.button('Go!'):
     if pred == 0:
-        st.write('Parece que la calidad de tu café es estándar... vamos, por no llamarlo de otra manera.')
+        st.header('Parece que la calidad de tu café es estándar... vamos, por no llamarlo de otra manera.')
     if pred == 1:
-        st.write('¡Tienes en tus manos un café de buena calidad! Esperemos que el precio se ajuste a la misma.')
+        st.header('¡Tienes en tus manos un café de buena calidad! Esperemos que el precio se ajuste a la misma.')
     if pred == 2:
-        st.write('¡Felicidades! Tu café es de calidad premium, lo mejor de lo mejor... más te vale no ponerle leche.')
+        st.header('¡Felicidades! Tu café es de calidad premium, lo mejor de lo mejor... más te vale no ponerle leche.')
