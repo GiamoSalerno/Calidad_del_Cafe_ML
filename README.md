@@ -7,7 +7,7 @@ Este repositorio contiene un modelo de Machine Learning diseñado para determina
 El repositorio está organizado en las siguientes carpetas:
 
 ### 1. data
-En esta carpeta se encuentran los datos utilizados en el proyecto en diferentes formas. Los datos se encuentran en su estado crudo, procesados y subdivididos en conjuntos de entrenamiento y prueba para facilitar las pruebas.
+En esta carpeta se encuentran los datos utilizados en el proyecto en diferentes formas. Los datos se encuentran en su estado crudo, procesados y subdivididos en conjuntos de entrenamiento y prueba para facilitar las evaluaciones.
 
 ### 2. src
 La carpeta `src` contiene los archivos ejecutables en formato `.py`. Estos archivos se utilizan para procesar los datos, definir el modelo y evaluar su rendimiento.
