@@ -278,7 +278,7 @@ if st.sidebar.button('Procesamiento'):
         st.balloons()
 
 if st.sidebar.button('Modelos'):
-    tab0, tab1, tab2, tab3, tab4 = st.tabs(['Hiperparametrización', 'Modelo Final', 'Entrenamiento', 'Validación', 'y'])
+    tab0, tab1, tab2, tab3 = st.tabs(['Hiperparametrización', 'Modelo Final', 'Entrenamiento', 'Validación'])
 
     with tab0:
         st.header('Pipeline')
