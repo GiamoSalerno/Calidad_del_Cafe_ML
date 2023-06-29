@@ -289,31 +289,31 @@ if st.sidebar.button('Modelos'):
                        ('classifier', RandomForestClassifier())])
 
         logistic_params = {'selectkbest__k' : np.arange(3,9),
-                        'pca__n_components': [8, 9, 10],
+                        'pca__n_components': [7, 8, 9],
                         'classifier': [LogisticRegression(solver='liblinear')],
                         'classifier__penalty': ['l1','l2']}
 
         rf_params = {'scaler' : [StandardScaler(), None],
                     'selectkbest__k' : np.arange(3,9),
-                    'pca__n_components': [8, 9, 10],
+                    'pca__n_components': [7, 8, 9],
                     'classifier': [RandomForestClassifier()],
                     'classifier__max_features': [2, 3, 4],
                     'classifier__max_depth': [3, 5, 7]}
 
         gb_params = {'scaler' : [StandardScaler(), None],
                     'selectkbest__k' : np.arange(3,9),
-                    'pca__n_components': [8, 9, 10],
+                    'pca__n_components': [7, 8, 9],
                     'classifier': [GradientBoostingClassifier()],
                     'classifier__max_features': [2, 3, 4],
                     'classifier__max_depth': [6, 7, 8]}
 
         knn_params = {'selectkbest__k' : np.arange(3,9),
-                    'pca__n_components': [8, 9, 10],
+                    'pca__n_components': [7, 8, 9],
                     'classifier': [KNeighborsClassifier()],
                     'classifier__n_neighbors': [5, 7, 12]}
 
         svm_params = {'selectkbest__k' : np.arange(3,9),
-                    'pca__n_components': [8, 9, 10],
+                    'pca__n_components': [7, 8, 9],
                     'classifier': [SVC()],
                     'classifier__C': [0.1, 1, 10]}
 
