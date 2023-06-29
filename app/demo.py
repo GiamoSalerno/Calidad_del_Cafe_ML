@@ -43,12 +43,13 @@ if st.sidebar.button('Defectos'):
     st.markdown('Puedes encontrar más información [aquí](https://www.coffeestrategies.com/wp-content/uploads/2020/08/Green-Coffee-Defect-Handbook.pdf)')
     st.divider()
 
+# Parámetros de entrada.
 st.header('Introduce los Parámetros:')
 pais = st.slider('País', 0, 19)
 variedad = st.slider('Variedad', 0, 16)
 procesado = st.slider('Procesado', 0, 4)
 humedad = st.slider('Humedad', 0.0, 0.2)
-year = st.slider('Año de Cosecha', 2014, 2023)
+year = st.slider('Año de Cosecha', 2011, 2023)
 color = st.slider('Color; 0 para verde, 1 para otro', 0, 1)
 altitud = st.slider('Altitud', 1, 5000)
 def1 = st.slider('Número de Defectos de Categoría 1', 0, 50)
@@ -57,10 +58,12 @@ def2 = st.slider('Número de Defectos de Categoría 2', 0, 50)
 input = np.array([pais, variedad, procesado, humedad, year, color, altitud, def1, def2]).reshape(1, -1)
 pred = modelo.predict(input)[0]
 
-if st.button('Go!'):
+if st.button('¡Espresso!'):
     if pred == 0:
         st.header('Parece que la calidad de tu café es estándar... vamos, por no llamarlo de otra manera.')
     if pred == 1:
         st.header('¡Tienes en tus manos un café de buena calidad! Esperemos que el precio se ajuste a la misma.')
     if pred == 2:
         st.header('¡Felicidades! Tu café es de calidad premium, lo mejor de lo mejor... más te vale no ponerle leche.')
+if st.button('Actualizar'):
+    st.experimental_rerun()
