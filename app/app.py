@@ -31,15 +31,6 @@ if st.sidebar.button('¿Agua Sucia o Café?'):
     st.markdown('La idea principal es crear un clasificador de calidad de café en tres distintas categorías: estándar, bueno y premium; para así asegurarnos de siempre comprar productos de calidad por el precio ideal.')
     st.markdown('Para ello, se utilizan diferentes variables: país de origen, variedad de café, procesado, año de cosecha, humedad, color, defectos e incluso la altura en que ha sido cultivado. Todo esto se introduce en un modelo predictivo de machine learning, para así saber qué tan bueno es el producto antes de realizar la compra.')
 
-    pais = st.slider('País', 0, 19)
-    variedad = st.slider('Variedad', 0, 16)
-    procesado = st.slider('Procesado', 0, 4)
-    humedad = st.slider('Humedad', 0.0, 0.2)
-    year = st.slider('Año de Cosecha', 2014, 2023)
-    color = st.slider('Color', 0, 1)
-    altitud = st.slider('Altitud', 1, 5000)
-    def1 = st.slider('Defectos de Categoría 1', 0, 50)
-    def2 = st.slider('Defectos de Categoría 2', 0, 50)
 # Datos
 if st.sidebar.button('Datos'):
     st.header('Datos en Crudo')
@@ -277,9 +268,50 @@ if st.sidebar.button('Procesamiento'):
         test.shape
         st.balloons()
 
-if st.sidebar.button('Modelos'):
-    tab0, tab1, tab2, tab3 = st.tabs(['Hiperparametrización', 'Modelo Final', 'Entrenamiento', 'Validación'])
+# Machine Learning
 
+if st.sidebar.button('Modelos'):
+    pretab, tab0, tab1, tab2, tab3 = st.tabs(['Primeros Modelos', 'Hiperparametrización', 'Modelo Final', 'Entrenamiento', 'Validación'])
+
+    with pretab:
+        st.header('Regresión Logística')
+        st.code('''
+        logistic_regression = LogisticRegression()
+
+        logistic_params = {'penalty': ['l1', 'l2'],
+                        'C': [0.1, 1.0, 10.0],
+                        'solver': ['liblinear', 'saga'],
+                        'max_iter': [100, 500, 1000]}
+
+        logistic_gs = GridSearchCV(estimator=logistic_regression, param_grid=logistic_params, cv=5, scoring='accuracy', n_jobs=-1)
+        logistic_gs.fit(Xtrain, ytrain)
+        pred = logistic_gs.predict(Xtest)
+        ''')
+        st.markdown('* Accuracy: 56,99 %')
+        st.markdown('* Precision: [41,45 % ; 79,78 % ; 29,55 %]')
+        st.markdown('* Recall: [58,39 % ; 55,55 % ; 63,15 %]')
+        st.divider()
+        st.header('Ada Boost + Árbol de Clasificación')
+        st.code('''
+        base_classifier = DecisionTreeClassifier()
+
+        ada_boost = AdaBoostClassifier(base_estimator=base_classifier)
+
+        ada_params = {'n_estimators': [50, 100, 200],
+                    'learning_rate': [0.1, 0.5, 1.0],
+                    'base_estimator__max_features': [2, 3, 4],
+                    'base_estimator__max_depth': [3, 5, 7],
+                    'base_estimator__min_samples_leaf': [2, 4, 6],
+                    'base_estimator__max_leaf_nodes': [6, 7, 8]}
+
+        ada_gs = GridSearchCV(estimator=ada_boost, param_grid=ada_params, cv=5, scoring='accuracy', n_jobs=-1)
+        ada_gs.fit(Xtrain, ytrain)
+        pred = ada_gs.predict(Xtest)
+        ''')
+        st.markdown('* Accuracy: 78,36 %')
+        st.markdown('* Precision: [66,32 % ; 86,17 % ; 75,36 %]')
+        st.markdown('* Recall: [76,19 % ; 73,80 % ; 92,72 %]')
+    
     with tab0:
         st.header('Pipeline')
         st.code("""
