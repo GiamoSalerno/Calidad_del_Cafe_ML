@@ -2,6 +2,12 @@
 
 Este repositorio contiene un modelo de Machine Learning diseñado para determinar la calidad del café en tres diferentes categorías: estándar, bueno y premium.
 
+## Datos
+
+Coffee Quality database from CQI  
+Fuente: [Kaggle](https://www.kaggle.com/datasets/volpatto/coffee-quality-database-from-cqi)  
+Fuente original: [Coffee Quality Institute](https://database.coffeeinstitute.org/)
+
 ##  Objetivos
 
 Como se ha mencionado antes, el objetivo es determinar la calidad del café, que bien podría hacerse a través de sus propiedades organolépticas, pero, al ser una suma, no tendría sentido abordarlo con un modelo de machine learning, por lo que se plantea determinar la misma calidad del café a través de otras características como pueden ser su país de origen o procesado; o incluso abordar propiedades organolépticas que no están incluidas en la sumatoria del cálculo de calidad, como puede ser la humedad del grano o el color de la drupa. 
