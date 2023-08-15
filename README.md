@@ -1,4 +1,6 @@
-# Proyecto de Machine Learning para determinar la calidad del café
+![portada](./docs/portada/portada.png)
+
+# Análisis y Predicción de Calidad del Café a Través de Machine Learning
 
 Este repositorio contiene un modelo de Machine Learning diseñado para determinar la calidad del café en tres diferentes categorías: estándar, bueno y premium.
 
